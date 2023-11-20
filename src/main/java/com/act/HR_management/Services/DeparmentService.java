@@ -17,12 +17,11 @@ import java.util.Optional;
 public class DeparmentService {
 
     private final DepartmentRepository departmentRepository;
-    private final EmployeeRepository employeeRepository;
 
-    public DeparmentService(DepartmentRepository departmentRepository,
-                            EmployeeRepository employeeRepository) {
+
+    public DeparmentService(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
-        this.employeeRepository = employeeRepository;
+
     }
 
 
@@ -52,8 +51,8 @@ public class DeparmentService {
         return DepartmentDto.fromEntity(department);
     }
 
-    public Optional<Department> getByDepartmentId(Long departmentId){
-        return departmentRepository.findById(departmentId);
+    public Optional<Department> getByDepartmentId(Long id){
+        return departmentRepository.findById(id);
     }
 
     public DepartmentDto updateDepartment(DepartmentDto departmentDto){

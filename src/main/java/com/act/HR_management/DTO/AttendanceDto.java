@@ -25,6 +25,8 @@ public class AttendanceDto {
     private Long employeeId;
     private AttendanceStatus attendanceStatus;
 
+
+
     public static AttendanceDto toDTO(Optional<Attendance> optionalAttendance) {
         Attendance attendance = optionalAttendance.get();
 
@@ -33,21 +35,21 @@ public class AttendanceDto {
 
     public static AttendanceDto fromEntity(Attendance attendance){
         AttendanceDto dto = new AttendanceDto();
-        dto.setAttendanceId(attendance.getAttendanceId());
+        dto.setAttendanceId(attendance.getId());
         dto.setRecordDate(attendance.getRecordDate());
         dto.setInTime(attendance.getInTime());
         dto.setOutTime(attendance.getOutTime());
         dto.setNotes(attendance.getNotes());
         dto.setAttendanceStatus(attendance.getAttendanceStatus());
         if (attendance.getEmployee() != null){
-            dto.setEmployeeId(attendance.getEmployee().getEmployeeId());
+            dto.setEmployeeId(attendance.getEmployee().getId());
         }
 
         return dto;
     }
     public Attendance toEntity(){
         Attendance attendance = new Attendance();
-        attendance.setAttendanceId(this.getAttendanceId());
+        attendance.setId(this.getAttendanceId());
         attendance.setRecordDate(this.getRecordDate());
         attendance.setInTime(this.getInTime());
         attendance.setOutTime(this.getOutTime());
@@ -55,7 +57,7 @@ public class AttendanceDto {
         attendance.setAttendanceStatus(this.getAttendanceStatus());
         if (employeeId != null){
             Employee employee = new Employee();
-            employee.setEmployeeId(employeeId);
+            employee.setId(employeeId);
             attendance.setEmployee(employee);
         }
         return attendance;

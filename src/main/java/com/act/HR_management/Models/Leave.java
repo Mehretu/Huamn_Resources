@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Leave {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long leaveId;
+    private Long id;
 
     private LocalDate startDate;
 

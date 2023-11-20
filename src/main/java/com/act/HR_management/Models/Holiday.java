@@ -20,5 +20,7 @@ public class Holiday {
 
     private LocalDate date;
 
+    private String name;
+
     private String Description;
 }

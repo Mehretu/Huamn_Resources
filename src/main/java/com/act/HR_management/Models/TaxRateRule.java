@@ -14,13 +14,12 @@ public class TaxRateRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "incomeTaxRuleId")
-    private IncomeTaxRule incomeTaxRule;
 
     private double incomeFrom;
 
     private double incomeTo;
 
     private double taxRatePercentage;
+
+
 }

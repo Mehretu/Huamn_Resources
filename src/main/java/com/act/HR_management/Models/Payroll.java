@@ -16,7 +16,7 @@ public class Payroll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
@@ -24,11 +24,17 @@ public class Payroll {
 
     private LocalDate payPeriodEndDate;
 
-    private double totalEarnings;
+    private double grossSalary;
 
-    private double totalDeductions;
+    private double benefits;
+    private double baseSalary;
 
     private double netPayment;
 
     private double incomeTax;
+
+    private double pension;
+    private double employerPension;
+    private double totalDeduction;
+
 }

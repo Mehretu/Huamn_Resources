@@ -78,8 +78,8 @@ public class LeaveRequestService {
         return leaveRequestDto;
 
     }
-    public LeaveRequest approveLeaveRequest(Long leaveRequestId){
-        LeaveRequest leaveRequest = leaveRequestRepository.findById(leaveRequestId)
+    public LeaveRequest approveLeaveRequest(Long id){
+        LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("There is no leave request with this id"));
         if (leaveRequest.getLeaveStatus() != LeaveStatus.PENDING){
             throw new IllegalArgumentException("Leave Request status ain't right");
@@ -87,8 +87,8 @@ public class LeaveRequestService {
         leaveRequest.setLeaveStatus(LeaveStatus.APPROVED);
         return leaveRequestRepository.save(leaveRequest);
     }
-    public LeaveRequest rejectLeaveRequest(Long leaveRequestId) {
-        LeaveRequest leaveRequest = leaveRequestRepository.findById(leaveRequestId)
+    public LeaveRequest rejectLeaveRequest(Long id) {
+        LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Leave request not found"));
 
         if (leaveRequest.getLeaveStatus() != LeaveStatus.PENDING) {
@@ -102,22 +102,7 @@ public class LeaveRequestService {
         return leaveRequestRepository.findById(id);
     }
 
-//    public LeaveRequestDto excludeWeekends(LeaveRequestDto leaveRequestDto){
-//        LocalDate startDate = leaveRequestDto.getStartDate();
-//        LocalDate endDate = leaveRequestDto.getEndDate();
-//        LocalDate currenDate = startDate;
-//        long weekends = 0;
-//
-//        while(!currenDate.isAfter(endDate)){
-//            DayOfWeek dayOfWeek = currenDate.getDayOfWeek();
-//            if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY){
-//                weekends++;
-//            }
-//            currenDate = currenDate.plusDays(1);
-//        }
-//        leaveRequestDto.setDuration(leaveRequestDto.getDuration() - weekends);
-//        return leaveRequestDto;
-//    }
+
 
 
 }

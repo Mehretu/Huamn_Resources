@@ -19,7 +19,7 @@ import java.util.List;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long departmentId;
+    private Long id;
 
     private String departmentName;
 

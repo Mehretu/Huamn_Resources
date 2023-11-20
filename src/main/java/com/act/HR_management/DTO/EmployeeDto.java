@@ -17,7 +17,9 @@ import java.util.stream.Collectors;
 @Data
 @Builder
 public class EmployeeDto {
-    private Long employeeId;
+    private Long id;
+
+    private String employeeId;
 
     private String firstName;
 
@@ -31,6 +33,12 @@ public class EmployeeDto {
 
     private String departmentName;
 
+    private String jobPosition;
+
+    private double baseSalary;
+
+    private double benefits;
+
 
     public static EmployeeDto toDTO(Optional<Employee> employeeOptional) {
         Employee employee = employeeOptional.get();
@@ -38,23 +46,33 @@ public class EmployeeDto {
     }
      public static EmployeeDto fromEntity(Employee employee){
          EmployeeDto employeeDto = new EmployeeDto();
+         employeeDto.setId(employee.getId());
          employeeDto.setEmployeeId(employee.getEmployeeId());
          employeeDto.setFirstName(employee.getFirstName());
          employeeDto.setLastName(employee.getLastName());
          employeeDto.setGender(employee.getGender());
          employeeDto.setPhone(employee.getPhoneNumber());
          employeeDto.setEmail(employee.getEmail());
-         employeeDto.setDepartmentName(employee.getDepartment().getDepartmentName());
+         if (employee.getDepartment() != null) {
+             employeeDto.setDepartmentName(employee.getDepartment().getDepartmentName());
+         }
+         employeeDto.setJobPosition(employee.getJobPosition());
+         employeeDto.setBaseSalary(employee.getBaseSalary());
+         employeeDto.setBenefits(employee.getBenefits());
          return employeeDto;
      }
     public Employee toEntity() {
         Employee employee = new Employee();
-        employee.setEmployeeId(this.employeeId);
+        employee.setId(this.getId());
+        employee.setEmployeeId(this.getEmployeeId());
         employee.setFirstName(this.firstName);
         employee.setLastName(this.lastName);
         employee.setGender(this.gender);
         employee.setPhoneNumber(this.phone);
+        employee.setJobPosition(this.jobPosition);
         employee.setEmail(this.email);
+        employee.setBaseSalary(this.baseSalary);
+        employee.setBenefits(this.benefits);
         return employee;
     }
 

@@ -22,7 +22,7 @@ public class LeaveBalanceDto {
     }
     public static LeaveBalanceDto fromEntity(LeaveBalance leaveBalance1){
         LeaveBalanceDto leaveBalanceDto = new LeaveBalanceDto();
-        leaveBalanceDto.setEmployeeId(leaveBalance1.getEmployee().getEmployeeId());
+        leaveBalanceDto.setEmployeeId(leaveBalance1.getEmployee().getId());
         leaveBalanceDto.setLeaveType(leaveBalance1.getLeaveType());
         return leaveBalanceDto;
     }

@@ -20,7 +20,7 @@ import java.util.List;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long employeeId;
+    private Long id;
 
     private String firstName;
 
@@ -34,13 +34,21 @@ public class Employee {
 
     private LocalDate hireDate;
 
-//    private double baseSalary;
+    private double baseSalary;
 
-//    @OneToMany
-//    private List<Overtime> overtime;
-//
-//    @OneToMany
-//    private List<Bonus> bonuse;
+    private String jobPosition;
+
+    private double benefits;
+
+    private String employeeId;
+
+    @OneToMany
+    @JsonIgnore
+    private List<Overtime> overtime;
+
+    @OneToMany
+    @JsonIgnore
+    private List<Bonus> bonuse;
 
 
     @JsonIgnore

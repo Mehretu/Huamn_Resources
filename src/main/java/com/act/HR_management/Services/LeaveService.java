@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 public class LeaveService {
 
     private final LeaveRepository leaveRepository;
-    private final LeaveRequestService leaveRequestService;
     private final LeaveBalanceService leaveBalanceService;
-    private final EmployeeService employeeService;
     private  final LeaveRequestRepository leaveRequestRepository;
 
     public LeaveService(LeaveRepository leaveRepository,
@@ -32,14 +30,12 @@ public class LeaveService {
                         EmployeeService employeeService,
                         LeaveRequestRepository leaveRequestRepository) {
         this.leaveRepository = leaveRepository;
-        this.leaveRequestService = leaveRequestService;
         this.leaveBalanceService = leaveBalanceService;
-        this.employeeService = employeeService;
         this.leaveRequestRepository = leaveRequestRepository;
     }
 
-    public Leave createLeave(Long leaveRequestId) {
-        LeaveRequest leaveRequest = leaveRequestRepository.findById(leaveRequestId)
+    public Leave createLeave(Long id) {
+        LeaveRequest leaveRequest = leaveRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("You cant find and leave request with this id"));
         if (leaveRequest.getLeaveStatus() != LeaveStatus.APPROVED) {
             throw new IllegalArgumentException("Leave request must be approved");
@@ -79,7 +75,7 @@ public class LeaveService {
     }
 
     public List<LeaveDto> getAllByEmployees(Long employeeId) {
-        List<Leave> leaves = leaveRepository.findAllByEmployeeId(employeeId);
+        List<Leave> leaves = leaveRepository.findAllByEmployee_Id(employeeId);
         List<LeaveDto> leaveDtoList = leaves.stream()
                 .map(LeaveDto::fromEntity)
                 .collect(Collectors.toList());
@@ -99,7 +95,7 @@ public class LeaveService {
             throw new IllegalArgumentException("The status gotta be created to be updated");
         }
         Leave updatedLeave = updatedLeaveDto.toEntity();
-        updatedLeave.setLeaveId(leaveId);
+        updatedLeave.setId(leaveId);
 
         updatedLeave = leaveRepository.save(updatedLeave);
 

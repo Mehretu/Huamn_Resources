@@ -57,7 +57,7 @@ public class LeaveRequestDto {
     }
     public static LeaveRequestDto fromEntity(LeaveRequest leaveRequest){
         LeaveRequestDto dto = new LeaveRequestDto();
-        dto.setEmmployeeId(leaveRequest.getEmployee().getEmployeeId());
+        dto.setEmmployeeId(leaveRequest.getEmployee().getId());
         dto.setStartDate(leaveRequest.getStartDate());
         dto.setEndDate(leaveRequest.getEndDate());
         dto.setLeaveStatus(leaveRequest.getLeaveStatus());

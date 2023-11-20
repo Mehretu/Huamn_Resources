@@ -26,7 +26,7 @@ public class DepartmentDto {
     }
     public static DepartmentDto fromEntity(Department department){
         DepartmentDto departmentDto = new DepartmentDto();
-        departmentDto.setDepartmentId(department.getDepartmentId());
+        departmentDto.setDepartmentId(department.getId());
         departmentDto.setDepartmentName(department.getDepartmentName());
         departmentDto.setDescription(department.getDescription());
 
@@ -35,7 +35,7 @@ public class DepartmentDto {
 
     public Department toEntity(){
         Department department = new Department();
-        department.setDepartmentId(this.departmentId);
+        department.setId(this.departmentId);
         department.setDepartmentName(this.departmentName);
         department.setDescription(this.description);
         return department;

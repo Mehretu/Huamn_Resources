@@ -22,7 +22,6 @@ public class Overtime {
 
     private LocalDate overtimeDate;
 
-//    private double overtimeRate;
 
     private double hoursWorked;
 

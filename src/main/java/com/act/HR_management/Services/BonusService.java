@@ -8,6 +8,8 @@ import com.act.HR_management.Repos.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @Service
@@ -33,17 +35,22 @@ public class BonusService {
 
     }
     public List<Bonus> getTotalBonuseforEmployees(Long employeeId){
-        List<Bonus> bonuses = bonusRepository.findBonusesByEmployee_EmployeeId(employeeId);
+        List<Bonus> bonuses = bonusRepository.findBonusesByEmployee_Id(employeeId);
         return  bonuses;
     }
 
-    public double calculateTotalBonuses(Long employeeId){
-        List<Bonus> bonusList = getTotalBonuseforEmployees(employeeId);
-        double total = 0.0;
 
-        for (Bonus bonus : bonusList){
-            total += bonus.getBonusAmount();
+
+    public double calalculateBonuses(Employee employee, int year,int month){
+        LocalDate startDate = LocalDate.of(year,month,1);
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Bonus> bonuses = bonusRepository.findBonusesByEmployee_IdAndBonusDateBetween(employee.getId(),startDate,endDate);
+        double totalBonuses = 0.0;
+
+        for (Bonus bonus : bonuses){
+            totalBonuses += bonus.getBonusAmount();
         }
-        return total;
+        return totalBonuses;
     }
 }

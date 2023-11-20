@@ -24,9 +24,9 @@ public class LeaveBalanceService {
         this.leaveBalanceRepository = leaveBalanceRepository;
         this.employeeRepository = employeeRepository;
     }
-    public LeaveBalance createLeaveBalance( Long employeeId,LeaveType leaveType){
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(()-> new EntityNotFoundException("There is no Employee found with this id:"+ employeeId));
+    public LeaveBalance createLeaveBalance( Long id,LeaveType leaveType){
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("There is no Employee found with this id:"+ id));
         double initialBalance = calculateInitialLeaveBalance(employee,leaveType);
         LeaveBalance leaveBalance = new LeaveBalance();
         leaveBalance.setEmployee(employee);
@@ -40,9 +40,9 @@ public class LeaveBalanceService {
                 .orElseThrow(()-> new EntityNotFoundException("Leave Balance not found for Employee and Leave Type"));
     }
 
-    public LeaveBalance updateLeaveBalance(Long employeeId,LeaveType leaveType, double newBalance){
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(()-> new EntityNotFoundException("There is no Employee found with this id: "+employeeId));
+    public LeaveBalance updateLeaveBalance(Long id,LeaveType leaveType, double newBalance){
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("There is no Employee found with this id: "+id));
         if(employee == null || leaveType == null){
             throw new IllegalArgumentException("Employee and Leave type cannot be null");
             }

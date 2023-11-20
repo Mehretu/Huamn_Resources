@@ -9,15 +9,17 @@ import com.act.HR_management.Models.Employee;
 import com.act.HR_management.Repos.AttendanceRepository;
 import com.act.HR_management.Repos.DepartmentRepository;
 import com.act.HR_management.Repos.EmployeeRepository;
-import com.act.HR_management.Utility.Export;
+import com.act.HR_management.Utility.ReportGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,16 +30,15 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
-    private final Export export;
+
 
     public AttendanceService(AttendanceRepository attendanceRepository,
                              EmployeeRepository employeeRepository,
-                             DepartmentRepository departmentRepository,
-                             Export export) {
+                             DepartmentRepository departmentRepository
+                            ) {
         this.attendanceRepository = attendanceRepository;
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
-        this.export = export;
 
     }
 
@@ -175,11 +176,36 @@ public class AttendanceService {
         return new AttendanceUpdateResult(updatedAttendanceDtoList);
     }
 
-    public byte[] exportMonthlyAttendanceReportAsExcel(int year, int month) throws IOException {
-        List<AttendanceReportDto> reportData = getMonthlyAttendanceReport(year, month);
-        return export.exportMonthlyAttendanceReportAsExcel(reportData);
+    public List<AttendanceReportDto> saveAttendanceList(List<AttendanceReportDto> attendanceList){
+        List<Attendance> attendances = attendanceList.stream()
+                .map(AttendanceReportDto::toEntity)
+                .collect(Collectors.toList());
+        List<Attendance> saved = attendanceRepository.saveAll(attendances);
+        return saved.stream()
+                .map(AttendanceReportDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
+
+    private List<String> constructAttendanceReportHeaders() {
+        List<String> headers = new ArrayList<>();
+        headers.add("Employee Name");
+        headers.add("Department");
+        headers.add("Date");
+        headers.add("In Time");
+        headers.add("Out Time");
+        headers.add("Status");
+        return headers;
+    }
+    public byte[] generateAttendanceExcelReport(List<AttendanceReportDto> reportData) throws IOException {
+        List<String> headers = constructAttendanceReportHeaders();
+        return ReportGenerator.generateExcelReport(reportData, headers);
+    }
+
+    public void generateAttendancePdfReport(List<AttendanceReportDto> reportData, OutputStream outputStream){
+        List<String> headers = constructAttendanceReportHeaders();
+        ReportGenerator.exportToPdf(reportData, headers, outputStream);
+    }
 
     public List<AttendanceReportDto> getMonthlyAttendanceReport(int year, int month){
         LocalDate startDate = LocalDate.of(year,month,1);

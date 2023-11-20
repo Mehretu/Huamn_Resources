@@ -14,8 +14,8 @@ import java.util.List;
 
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, Long> {
-    @Query("SELECT l from Leave l where l.employee.employeeId = :employeeId")
-    List<Leave> findAllByEmployeeId(Long employeeId);
+    @Query("SELECT l from Leave l where l.employee.id = :employeeId")
+    List<Leave> findAllByEmployee_Id(Long employeeId);
 
     List<LeaveDto> findAllByLeaveStatus(LeaveStatus leaveStatus);
 

@@ -12,9 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee,Long> {
+    Employee findEmployeeByFirstNameAndLastName(String firstName, String lastName);
 
 
-    List<Employee> findAllByDepartment_DepartmentId(@Param("departmentId") Long departmentId);
+    List<Employee> findAllByDepartment_Id(@Param("id") Long id);
 
     boolean existsByEmail(String email);
 
@@ -34,4 +35,6 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long> {
     @Query("SELECT e from Employee e WHERE " +
             "CONCAT(LOWER(e.firstName),' ', LOWER(e.lastName) ) = LOWER(:employeeName) ")
    Optional<Employee> findEmployeeByFirstNameAndLastName(@Param("employeeName") String employeeName);
+ @Query("SELECT e FROM Employee e WHERE e.employeeId = :employeeId")
+    Optional<Employee> findByEmployeeId(@Param("employeeId") String employeeId);
 }

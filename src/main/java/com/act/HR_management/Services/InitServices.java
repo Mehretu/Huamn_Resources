@@ -1,2 +1,20 @@
-package com.act.HR_management.Services;public class InitServices {
+package com.act.HR_management.Services;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@RequiredArgsConstructor
+public class InitServices {
+    private final TaxRateRuleService taxRateRuleService;
+
+
+    @Bean
+   public CommandLineRunner onInit() {
+        return args -> {
+            this.taxRateRuleService.onInit();
+        };
+    }
 }

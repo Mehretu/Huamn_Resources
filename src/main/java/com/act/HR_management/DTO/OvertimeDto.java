@@ -1,6 +1,7 @@
 package com.act.HR_management.DTO;
 
 import com.act.HR_management.Models.Overtime;
+import com.act.HR_management.Models.OvertimeType;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ public class OvertimeDto {
 
 
     private LocalDate overtimeDate;
+    private OvertimeType overtimeType;
 
     private double hoursWorked;
 
@@ -20,6 +22,7 @@ public class OvertimeDto {
         Overtime overtime = new Overtime();
         overtime.setOvertimeDate(this.getOvertimeDate());
         overtime.setHoursWorked(this.getHoursWorked());
+        overtime.setOvertimeType(this.overtimeType);
         overtime.setDescription(this.getDescription());
         return overtime;
     }

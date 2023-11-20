@@ -2,7 +2,6 @@ package com.act.HR_management.Conrollers;
 
 import com.act.HR_management.DTO.EmployeeDto;
 import com.act.HR_management.Models.Employee;
-import com.act.HR_management.Services.DeparmentService;
 import com.act.HR_management.Services.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +14,9 @@ import java.util.Optional;
 @RequestMapping("/employees")
 public class EmployeeController {
     private final EmployeeService employeeService;
-    private final DeparmentService departmentService;
 
-    public EmployeeController(EmployeeService employeeService, DeparmentService departmentService) {
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.departmentService = departmentService;
     }
 
     @PostMapping("/add")
@@ -56,8 +53,8 @@ public class EmployeeController {
 
     @PutMapping("/update")
     @ResponseBody
-    public ResponseEntity<EmployeeDto> update(@RequestBody EmployeeDto employeeDto){
-        EmployeeDto updatedEmployee = employeeService.update(employeeDto);
+    public ResponseEntity<EmployeeDto> update(@RequestParam("id") Long id , @RequestBody EmployeeDto employeeDto){
+        EmployeeDto updatedEmployee = employeeService.update(id,employeeDto);
         return ResponseEntity.ok(updatedEmployee);
     }
 

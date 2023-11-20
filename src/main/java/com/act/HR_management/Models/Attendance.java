@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long attendanceId;
+    private Long id;
 
     private LocalDate recordDate;
 

@@ -41,21 +41,26 @@ public class EmployeeService {
         return EmployeeDto.fromEntity(employeeModel);
 
     }
+    public Employee getByName(String firstName, String lastName) {
+        Employee employeeOptional = employeeRepository.findEmployeeByFirstNameAndLastName(firstName, lastName);
+     return employeeOptional;
+    }
+
 
     public List<EmployeeDto> getAll(){
         return EmployeeDto.toDtoList(employeeRepository.findAll());
     }
 
-    public List<EmployeeDto> getAllByDepartmentId(Long departmentId){
-        return EmployeeDto.toDtoList(employeeRepository.findAllByDepartment_DepartmentId(departmentId));
+    public List<EmployeeDto> getAllByDepartmentId(Long id){
+        return EmployeeDto.toDtoList(employeeRepository.findAllByDepartment_Id(id));
     }
 
     public Optional<Employee> getById(Long id){
         return employeeRepository.findById(id);
     }
 
-    public EmployeeDto update(EmployeeDto employeeDto){
-     Employee employee = employeeRepository.findById(employeeDto.getEmployeeId())
+    public EmployeeDto update(Long employeeId,EmployeeDto employeeDto){
+     Employee employee = employeeRepository.findById(employeeId)
              .orElseThrow(() -> new EntityNotFoundException("Employee not Found with ID:"+ employeeDto.getEmployeeId()));
 
              String newEmail = employeeDto.getEmail();
@@ -75,9 +80,9 @@ public class EmployeeService {
              return EmployeeDto.fromEntity(employee);
     }
 
-    public void deleteEmployee(Long employeeId){
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with ID:" + employeeId));
+    public void deleteEmployee(Long id){
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Employee not found with ID:" + id));
         employeeRepository.delete(employee);
     }
 
