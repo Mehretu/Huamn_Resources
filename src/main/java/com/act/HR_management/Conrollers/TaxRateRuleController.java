@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/taxRateRule")
+@RequestMapping("/api/taxRateRule")
 public class TaxRateRuleController {
     private final TaxRateRuleService taxRateRuleService;
 

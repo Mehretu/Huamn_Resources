@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/overtime")
+@RequestMapping("/api/overtime")
 public class OvertimeController {
     private final OvertimeService overtimeService;
 

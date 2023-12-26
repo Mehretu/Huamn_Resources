@@ -9,11 +9,12 @@ import java.time.LocalDate;
 @Data
 
 public class PayrollResponseDto {
+    private String employeeId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Employee employee;
+    private String firstName;
+    private String lastname;
     private double baseSalary;
-
     private double grossSalary;
     private double incomeTax;
     private double pension;
@@ -26,9 +27,19 @@ public class PayrollResponseDto {
 
     public Payroll toEntity() {
         Payroll payroll = new Payroll();
+
+//        Employee employee = new Employee();
+//        employee.setEmployeeId(employeeId);
+//        employee.setFirstName(firstName);
+//        employee.setLastName(lastname);
+//        employee.setBaseSalary(baseSalary);
+//        employee.setBenefits(benefits);
+
+
         payroll.setPayPeriodStartDate(this.getStartDate());
         payroll.setPayPeriodEndDate(this.getEndDate());
-        payroll.setEmployee(this.getEmployee());
+//        payroll.setEmployee(employee);
+
         payroll.setBaseSalary(this.getBaseSalary());
         payroll.setGrossSalary(this.getGrossSalary());
         payroll.setIncomeTax(this.getIncomeTax());
@@ -42,10 +53,13 @@ public class PayrollResponseDto {
 
     public static PayrollResponseDto fromEntity(Payroll payroll){
         PayrollResponseDto payrollDto = new PayrollResponseDto();
-
-        payrollDto.setEmployee(payroll.getEmployee());
+        payrollDto.setEmployeeId(payroll.getEmployee().getEmployeeId());
+        payrollDto.setFirstName(payroll.getEmployee().getFirstName());
+        payrollDto.setLastname(payroll.getEmployee().getLastName());
         payrollDto.setStartDate(payroll.getPayPeriodStartDate());
         payrollDto.setEndDate(payroll.getPayPeriodEndDate());
+        payrollDto.setBaseSalary(payroll.getEmployee().getBaseSalary());
+        payrollDto.setBenefits(payroll.getEmployee().getBenefits());
 
         payrollDto.setGrossSalary(payroll.getGrossSalary());
         payrollDto.setNetPayment(payroll.getNetPayment());

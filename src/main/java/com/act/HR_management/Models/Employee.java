@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -66,7 +67,6 @@ public class Employee {
     public void prePersist(){
         hireDate = LocalDate.now();
     }
-
 
 
 }

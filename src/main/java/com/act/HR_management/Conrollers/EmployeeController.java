@@ -2,17 +2,23 @@ package com.act.HR_management.Conrollers;
 
 import com.act.HR_management.DTO.EmployeeDto;
 import com.act.HR_management.Models.Employee;
+import com.act.HR_management.Models.Payroll;
 import com.act.HR_management.Services.EmployeeService;
+import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/employees")
 public class EmployeeController {
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
     private final EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
@@ -31,6 +37,27 @@ public class EmployeeController {
     public List<EmployeeDto> getAll(){
         return employeeService.getAll();
     }
+    @GetMapping("/allPayrolls")
+    @ResponseBody
+    public ResponseEntity<List<Payroll>> getEmployeePayrollByUsername(@RequestParam("id") Long id){
+        List<Payroll> employeePayrolls;
+        try {
+            employeePayrolls = employeeService.getEmployeePayrollsByUsername(id);
+            logger.info("Retrieved employee data for username: {}", id);
+            return ResponseEntity.ok(employeePayrolls);
+        }catch (EntityNotFoundException e){
+            logger.error("Employee not found with this username: {}",id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }catch (Exception e){
+            logger.error("An error occured while retrieving employee data with this username: {}",id,e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @GetMapping("/departments")
+    public ResponseEntity<Map<String,List<String>>> getDepartmentAndPositionMapping(){
+        Map<String, List<String>> departmentPositionMapping = employeeService.getDepartmentAndPositionMapping();
+        return ResponseEntity.ok(departmentPositionMapping);
+    }
 
     @GetMapping("/getAllBYDepartmentId")
     @ResponseBody
@@ -40,7 +67,7 @@ public class EmployeeController {
 
     @GetMapping("/getById/{id}")
     @ResponseBody
-    public ResponseEntity<EmployeeDto> getById(@PathVariable Long id){
+    public ResponseEntity<EmployeeDto> getById( Long id){
         Optional<Employee> employee = employeeService.getById(id);
         if (employee.isPresent()){
             EmployeeDto employeeDto = EmployeeDto.toDTO(employee);
@@ -51,9 +78,9 @@ public class EmployeeController {
 
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     @ResponseBody
-    public ResponseEntity<EmployeeDto> update(@RequestParam("id") Long id , @RequestBody EmployeeDto employeeDto){
+    public ResponseEntity<EmployeeDto> update(@PathVariable Long id , @RequestBody EmployeeDto employeeDto){
         EmployeeDto updatedEmployee = employeeService.update(id,employeeDto);
         return ResponseEntity.ok(updatedEmployee);
     }

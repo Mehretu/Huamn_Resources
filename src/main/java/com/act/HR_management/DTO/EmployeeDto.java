@@ -2,6 +2,7 @@ package com.act.HR_management.DTO;
 
 import com.act.HR_management.Models.Department;
 import com.act.HR_management.Models.Employee;
+import com.act.HR_management.Utility.EmployeeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,6 +62,20 @@ public class EmployeeDto {
          employeeDto.setBenefits(employee.getBenefits());
          return employeeDto;
      }
+    public static EmployeeDto fromEmployeeEnum(EmployeeEnum employeeEnum){
+        EmployeeDto employeeDto = new EmployeeDto();
+        employeeDto.setEmployeeId(employeeEnum.getEmployeeId());
+        employeeDto.setFirstName(employeeEnum.getFirstName());
+        employeeDto.setLastName(employeeEnum.getLastName());
+        employeeDto.setGender(employeeEnum.getGender());
+        employeeDto.setPhone(employeeEnum.getPhone());
+        employeeDto.setEmail(employeeEnum.getEmail());
+        employeeDto.setDepartmentName(employeeEnum.getDepartmentName());
+        employeeDto.setJobPosition(employeeEnum.getJobPosition());
+        employeeDto.setBaseSalary(employeeEnum.getBaseSalary());
+        employeeDto.setBenefits(employeeEnum.getBenefits());
+        return employeeDto;
+    }
     public Employee toEntity() {
         Employee employee = new Employee();
         employee.setId(this.getId());
@@ -81,6 +96,7 @@ public class EmployeeDto {
                  .map(EmployeeDto::toEntity)
                  .collect(Collectors.toList());
     }
+
 
     public static List<EmployeeDto> toDtoList(List<Employee> employees){
          return employees.stream()

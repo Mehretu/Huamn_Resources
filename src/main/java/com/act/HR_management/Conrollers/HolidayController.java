@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/holiday")
+@RequestMapping("/api/holiday")
 public class HolidayController {
     private final HolidayService holidayService;
 

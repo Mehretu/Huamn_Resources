@@ -44,16 +44,16 @@ public class ReportGenerator {
 
                 if (rowData instanceof PayrollResponseDto) {
                     PayrollResponseDto payrollReport = (PayrollResponseDto) rowData;
-                    dataRow.createCell(0).setCellValue(payrollReport.getEmployee().getEmployeeId());
+                    dataRow.createCell(0).setCellValue(payrollReport.getEmployeeId());
                     dataRow.createCell(1).setCellValue(payrollReport.getStartDate() != null ? payrollReport.getStartDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")):"");
                     dataRow.createCell(2).setCellValue(payrollReport.getEndDate() != null ? payrollReport.getEndDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")):"");
-                    dataRow.createCell(3).setCellValue(payrollReport.getEmployee().getFirstName()+" "+payrollReport.getEmployee().getLastName());
-                    dataRow.createCell(4).setCellValue(payrollReport.getEmployee().getBaseSalary());
+                    dataRow.createCell(3).setCellValue(payrollReport.getFirstName() +" "+ payrollReport.getLastname());
+                    dataRow.createCell(4).setCellValue(payrollReport.getBaseSalary());
                     dataRow.createCell(5).setCellValue(payrollReport.getGrossSalary());
                     dataRow.createCell(6).setCellValue(payrollReport.getIncomeTax());
                     dataRow.createCell(7).setCellValue(payrollReport.getPension());
                     dataRow.createCell(8).setCellValue(payrollReport.getEmployerPension());
-                    dataRow.createCell(9).setCellValue(payrollReport.getEmployee().getBenefits());
+                    dataRow.createCell(9).setCellValue(payrollReport.getBenefits());
                     dataRow.createCell(10).setCellValue(payrollReport.getTotalDeduction());
                     dataRow.createCell(11).setCellValue(payrollReport.getNetPayment());
 
@@ -115,12 +115,12 @@ public class ReportGenerator {
                 }
                 else if (report instanceof  PayrollResponseDto){
                     PayrollResponseDto parollReport = (PayrollResponseDto) report;
-                    table.addCell(parollReport.getEmployee().getEmployeeId());
+                    table.addCell(parollReport.getEmployeeId());
                     table.addCell(parollReport.getStartDate() != null ? parollReport.getStartDate().toString(): "");
                     table.addCell(parollReport.getEndDate() != null ? parollReport.getEndDate().toString() : "");
-                    table.addCell(parollReport.getEmployee().getFirstName()+" "+parollReport.getEmployee().getLastName());
-                    table.addCell(String.valueOf(parollReport.getEmployee().getBaseSalary()));
-                    table.addCell(String.valueOf(parollReport.getEmployee().getBenefits()));
+                    table.addCell(parollReport.getFirstName()+" "+parollReport.getLastname());
+                    table.addCell(String.valueOf(parollReport.getBaseSalary()));
+                    table.addCell(String.valueOf(parollReport.getBenefits()));
 
                     table.addCell(String.valueOf(parollReport.getGrossSalary()));
                     table.addCell(String.valueOf(parollReport.getIncomeTax()));

@@ -5,11 +5,13 @@ import com.act.HR_management.Exception.DepartmentAlreadyExistsException;
 import com.act.HR_management.Models.Department;
 import com.act.HR_management.Repos.DepartmentRepository;
 import com.act.HR_management.Repos.EmployeeRepository;
+import com.act.HR_management.Utility.DepartmentEnum;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,5 +70,15 @@ public class DeparmentService {
     public List<DepartmentDto> searchDepartments(String query, LocalDate startDate,LocalDate endDate){
         List<Department> departments = departmentRepository.search(query,startDate,endDate);
         return DepartmentDto.toDtoList(departments);
+    }
+
+    public void onInit() {
+        Arrays.stream(DepartmentEnum.values()).forEach(departmentEnum ->{
+            DepartmentDto departmentDto = new DepartmentDto();
+            departmentDto.setDepartmentName(departmentEnum.getDepartmentName());
+            departmentDto.setDescription(departmentEnum.getDescription());
+            createDepartment(departmentDto);
+
+        });
     }
 }

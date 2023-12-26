@@ -34,7 +34,9 @@ public class Payroll {
     private double incomeTax;
 
     private double pension;
+
     private double employerPension;
+
     private double totalDeduction;
 
 }

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/leave-request")
+@RequestMapping("/api/leave-request")
 public class LeaveRequestController {
     private final LeaveRequestService leaveRequestService;
 

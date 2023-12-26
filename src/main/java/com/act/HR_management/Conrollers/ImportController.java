@@ -2,7 +2,6 @@ package com.act.HR_management.Conrollers;
 
 import com.act.HR_management.DTO.AttendanceReportDto;
 import com.act.HR_management.DTO.PayrolImportDto;
-import com.act.HR_management.DTO.PayrollResponseDto;
 import com.act.HR_management.Services.AttendanceService;
 import com.act.HR_management.Services.PayrollService;
 import com.act.HR_management.Utility.ExcelImport;
@@ -15,7 +14,8 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/import")
+@RequestMapping("/api/import")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ImportController {
     private final AttendanceService attendanceService;
 
@@ -26,7 +26,7 @@ public class ImportController {
         this.payrollService = payrollService;
     }
 
-    @PostMapping(value = "/attendance", consumes = {"multipart/form-data"})
+        @PostMapping(value = "/attendance", consumes = {"multipart/form-data"})
         public ResponseEntity<?> importAttendanceData(@RequestParam("file") MultipartFile file) {
             try {
                 List<AttendanceReportDto> attendanceList = ExcelImport.processExcelFile(file, AttendanceReportDto.class);

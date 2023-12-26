@@ -10,7 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/leaveBalance")
+@RequestMapping("/api/leaveBalance")
 public class LeaveBalanceController {
     private final LeaveBalanceService leaveBalanceService;
     private final EmployeeService employeeService;

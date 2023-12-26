@@ -4,25 +4,34 @@ import com.act.HR_management.DTO.EmployeeDto;
 import com.act.HR_management.Exception.DuplicateEmailException;
 import com.act.HR_management.Models.Department;
 import com.act.HR_management.Models.Employee;
+import com.act.HR_management.Models.Payroll;
 import com.act.HR_management.Repos.DepartmentRepository;
 import com.act.HR_management.Repos.EmployeeRepository;
+import com.act.HR_management.Repos.PayrollRepository;
+import com.act.HR_management.Utility.EmployeeEnum;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+    private final PayrollRepository payrollRepository;
 
     public EmployeeService(EmployeeRepository employeeRepository,
-                           DepartmentRepository departmentRepository) {
+                           DepartmentRepository departmentRepository,
+                           PayrollRepository payrollRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
+        this.payrollRepository = payrollRepository;
     }
 
     public EmployeeDto create(EmployeeDto employeeDto){
@@ -46,6 +55,15 @@ public class EmployeeService {
      return employeeOptional;
     }
 
+    public Map<String, List<String>> getDepartmentAndPositionMapping(){
+        List<String> distinctDepartments = employeeRepository.getDistinctDepartments();
+        return distinctDepartments.parallelStream()
+                .collect(Collectors.toMap(
+                        department -> department,
+                        employeeRepository::getDistinctJobPositionByDepartment
+                ));
+    }
+
 
     public List<EmployeeDto> getAll(){
         return EmployeeDto.toDtoList(employeeRepository.findAll());
@@ -55,8 +73,12 @@ public class EmployeeService {
         return EmployeeDto.toDtoList(employeeRepository.findAllByDepartment_Id(id));
     }
 
+    public Optional<Employee> findById(String id){
+        return employeeRepository.findByEmployeeId(id);
+    }
+
     public Optional<Employee> getById(Long id){
-        return employeeRepository.findById(id);
+        return  employeeRepository.findById(id);
     }
 
     public EmployeeDto update(Long employeeId,EmployeeDto employeeDto){
@@ -90,4 +112,21 @@ public class EmployeeService {
         return employeeRepository.search(query);
     }
 
+    public void onInit(){
+        Arrays.stream(EmployeeEnum.values()).forEach(employeeEnum -> {
+            EmployeeDto employeeDto = EmployeeDto.fromEmployeeEnum(employeeEnum);
+            create(employeeDto);
+
+        });
+    }
+
+    public List<Payroll> getEmployeePayrollsByUsername(Long id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        List<Payroll> payrolls;
+        if (employee.isEmpty()){
+            throw new EntityNotFoundException("Student not found with this id: "+ id);
+        }
+        payrolls = payrollRepository.findAllByEmployee(employee.get());
+        return payrolls;
+    }
 }

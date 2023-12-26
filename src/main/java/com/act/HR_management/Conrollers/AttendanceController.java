@@ -13,9 +13,9 @@
     import java.time.LocalDate;
     import java.util.List;
     import java.util.Optional;
-
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RestController
-    @RequestMapping("/attendances")
+    @RequestMapping("/api/attendances")
     public class AttendanceController {
         private final AttendanceService attendanceService;
 

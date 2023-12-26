@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/overtTimeType")
+@RequestMapping("/api/overtTimeType")
 public class OvertimeTypeController {
 
     private final OvertimeTypeService overtimeTypeService;

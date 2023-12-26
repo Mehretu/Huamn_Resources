@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("/api/reports")
 
 public class ReportController {
     private final AttendanceService attendanceService;
@@ -51,7 +51,7 @@ public class ReportController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating PDF report.");
             }
         }
-    @GetMapping("/attendance-pdf-report/{year}/{month}")
+    @PostMapping("/attendance-pdf-report/{year}/{month}")
     public ResponseEntity<?> generateAttendancePdfReport(@PathVariable int year,
                                                       @PathVariable int month,
                                                       HttpServletResponse response) {
@@ -75,9 +75,9 @@ public class ReportController {
 
 
 
-    @GetMapping("/payrollreportExcel/{year}/{month}")
-    public ResponseEntity<byte[]> generatePayrollReportExcel(@PathVariable int year,
-                                                        @PathVariable int month) {
+    @PostMapping("/payrollreportExcel")
+    public ResponseEntity<byte[]> generatePayrollReportExcel(@RequestParam(name = "year") int year,
+                                                             @RequestParam(name = "month") int month) {
         try {
             List<PayrollResponseDto> payrollReportData = payrollService.getMonthlyReport(year, month);
             byte[] excelReport = payrollService.generatePayrollExcelReport(payrollReportData);

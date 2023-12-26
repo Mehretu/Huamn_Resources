@@ -10,6 +10,12 @@ import jakarta.validation.ValidationException;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PayrollService {
-
+        private static final Logger logger = LoggerFactory.getLogger(PayrollService.class);
         private PayrollRepository payrollRepository;
         private EmployeeService employeeService;
 
@@ -48,7 +54,7 @@ public class PayrollService {
         }
 
         public PayrollResponseDto create(PayrollRequestDto requestDto){
-                Employee employee = employeeRepository.findById(requestDto.getEmployeeId())
+                Employee employee = employeeRepository.findByEmployeeId(requestDto.getEmployeeId())
                         .orElseThrow(()-> new EntityNotFoundException("There is no employee found with this id: "+requestDto.getEmployeeId()));
                 if (employee.getBaseSalary() == 0){
                         throw new IllegalArgumentException("At least You have to insert a base salary to create a payroll ");
@@ -56,6 +62,7 @@ public class PayrollService {
 
                 PayrollResponseDto responseDto = calculatePayroll(requestDto);
                 Payroll payroll =  responseDto.toEntity();
+                payroll.setEmployee(employee);
 
 
                 payrollRepository.save(payroll);
@@ -81,8 +88,31 @@ public class PayrollService {
                         .orElseThrow(() -> new EntityNotFoundException("Payroll not found with id: " + id));
         }
 
-        public List<Payroll> getAllPayrolls() {
-                return payrollRepository.findAll();
+        public Page<Payroll> getAllPayrolls(String search,
+                                            LocalDate startDate,
+                                            LocalDate endDate,
+                                            String department,
+                                            String jobPosition,
+                                            Pageable pageable) {
+                try {
+//                        LocalDate startDate = LocalDate.of(year,month,1);
+//                        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+                        Page<Payroll> payrollPage = payrollRepository.findAll(search,department,jobPosition,startDate,endDate,pageable);
+                        List<Payroll> payrolls = payrollPage.getContent();
+                        return new PageImpl<>(payrolls,pageable,payrollPage.getTotalElements());
+                }catch (Exception e){
+                        logger.error("An error occured while getting all payrolls. ", e);
+                        return new PageImpl<>(Collections.emptyList(), pageable, 0);
+                }
+        }
+
+       public List<Payroll> findAll(String searchQuery,
+                              String department,
+                              String jobPosition,
+                              LocalDate startDate,
+                               LocalDate endDate){
+                List<Payroll> payrollList = payrollRepository.findAllByParameters(searchQuery,department,jobPosition,startDate,endDate);
+                return payrollList;
         }
 
         public List<PayrollResponseDto> getMonthlyReport(int year, int month){
@@ -113,10 +143,10 @@ public class PayrollService {
                 payrollRepository.delete(existingPayroll);
         }
 
-        public List<PayrollResponseDto> search(String employeeName,int year, int month){
+        public List<PayrollResponseDto> search(String employeeName, int year, int month){
            LocalDate startDate = LocalDate.of(year,month,1);
            LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
-           List<Payroll> payrolls = payrollRepository.searchPayrolls(employeeName,startDate,endDate);
+           List<Payroll> payrolls = payrollRepository.searchPayrolls(employeeName, startDate,endDate);
            List<PayrollResponseDto> payrollResponseDtoList = payrolls.stream()
                    .map(PayrollResponseDto::fromEntity)
                    .collect(Collectors.toList());
@@ -217,7 +247,7 @@ public class PayrollService {
 
 
         public PayrollResponseDto calculatePayroll(PayrollRequestDto requestDto){
-                Employee employee = employeeService.getById(requestDto.getEmployeeId())
+                Employee employee = employeeService.findById(requestDto.getEmployeeId())
                         .orElseThrow(()-> new EntityNotFoundException("There is no Employee found with this id: "+ requestDto.getEmployeeId()));
 
                 PayrollResponseDto responseDto = new PayrollResponseDto();
@@ -239,7 +269,9 @@ public class PayrollService {
                 double totalDeduction = incomeTax + pension.getEmployeePension();
                 responseDto.setStartDate(startDate);
                 responseDto.setEndDate(endDate);
-                responseDto.setEmployee(employee);
+                responseDto.setEmployeeId(employee.getEmployeeId());
+                responseDto.setFirstName(employee.getFirstName());
+                responseDto.setLastname(employee.getLastName());
                 responseDto.setBaseSalary(baseSalary);
                 responseDto.setGrossSalary(grossSalary);
                 responseDto.setBenefits(benefits);

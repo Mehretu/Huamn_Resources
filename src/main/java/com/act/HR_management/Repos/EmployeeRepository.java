@@ -18,6 +18,10 @@ public interface EmployeeRepository extends JpaRepository<Employee,Long> {
     List<Employee> findAllByDepartment_Id(@Param("id") Long id);
 
     boolean existsByEmail(String email);
+    @Query("SELECT DISTINCT e.department.departmentName FROM Employee e")
+    List<String> getDistinctDepartments();
+    @Query("SELECT DISTINCT e.jobPosition FROM Employee e WHERE e.department.departmentName = :department")
+    List<String> getDistinctJobPositionByDepartment(@Param("department") String department);
 
     @Query("SELECT e FROM Employee e WHERE (:query IS NULL OR " +
             "LOWER(e.email) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
